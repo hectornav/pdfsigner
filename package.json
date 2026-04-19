@@ -75,7 +75,8 @@
         "libxss1",
         "libxtst6"
       ],
-      "category": "Office"
+      "category": "Office",
+      "afterInstall": "scripts/afterInstall.sh"
     },
     "directories": {
       "output": "dist"
