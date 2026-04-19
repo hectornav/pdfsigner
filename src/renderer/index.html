@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SignPDF — Firma Digital de Documentos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/icons/icon.png">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <!-- ═══ Top Toolbar ═══ -->
+  <header id="toolbar">
+    <div class="toolbar-left">
+      <div class="app-brand">
+        <svg class="brand-icon" width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="url(#g1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" stroke="url(#g1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g1" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs></svg>
+        <span class="brand-text">Sign<strong>PDF</strong></span>
+      </div>
+      <div class="toolbar-divider"></div>
+      <button id="btn-open" class="toolbar-btn" title="Abrir PDF (Ctrl+O)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        <span>Abrir</span>
+      </button>
+      <button id="btn-save" class="toolbar-btn" title="Guardar copia (Ctrl+S)" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+        <span>Guardar</span>
+      </button>
+      <div class="toolbar-divider"></div>
+      <button id="btn-rotate-cw" class="toolbar-btn icon-only" title="Rotar 90° (Ctrl+R)" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23,4 23,10 17,10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      </button>
+      <button id="btn-rotate-ccw" class="toolbar-btn icon-only" title="Rotar -90°" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1,4 1,10 7,10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+      </button>
+      <button id="btn-delete-page" class="toolbar-btn icon-only" title="Eliminar página" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      </button>
+      <div class="toolbar-divider"></div>
+      <button id="btn-merge" class="toolbar-btn" title="Unir PDFs (Ctrl+M)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><path d="M6 11v4a2 2 0 002 2h8a2 2 0 002-2v-4"/><path d="M12 13v8M9 18l3 3 3-3"/></svg>
+        <span>Unir</span>
+      </button>
+      <button id="btn-split" class="toolbar-btn" title="Dividir PDF" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M14 14l7 7M3 8V3h5M10 10L3 3"/></svg>
+        <span>Dividir</span>
+      </button>
+      <button id="btn-extract" class="toolbar-btn" title="Extraer páginas" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        <span>Extraer</span>
+      </button>
+      <button id="btn-watermark" class="toolbar-btn" title="Añadir marca de agua" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span>Marca agua</span>
+      </button>
+    </div>
+
+    <div class="toolbar-center">
+      <button id="btn-zoom-out" class="toolbar-btn icon-only" title="Alejar" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <span id="zoom-level" class="zoom-display">100%</span>
+      <button id="btn-zoom-in" class="toolbar-btn icon-only" title="Acercar" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </button>
+      <div class="toolbar-divider"></div>
+      <button id="btn-prev-page" class="toolbar-btn icon-only" title="Página anterior" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+      </button>
+      <span id="page-info" class="page-display">—</span>
+      <button id="btn-next-page" class="toolbar-btn icon-only" title="Página siguiente" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg>
+      </button>
+    </div>
+
+    <div class="toolbar-right">
+      <button id="btn-cert" class="toolbar-btn" title="Cargar certificado (Ctrl+K)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+        <span>Certificado</span>
+      </button>
+      <button id="btn-sign" class="toolbar-btn primary" title="Firmar documento (Ctrl+Shift+S)" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>Firmar PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Main Content ═══ -->
+  <main id="app-main">
+    <!-- Sidebar: Thumbnails & Certificate Info -->
+    <aside id="sidebar">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active" data-tab="thumbnails">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Páginas
+        </button>
+        <button class="sidebar-tab" data-tab="certificate">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Firma
+        </button>
+      </div>
+
+      <div id="tab-thumbnails" class="sidebar-content active">
+        <div id="thumbnail-list" class="thumbnail-list">
+          <div class="sidebar-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+            <p>Abre un PDF para ver las páginas</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-certificate" class="sidebar-content">
+        <div id="cert-panel" class="cert-panel">
+          <div class="sidebar-empty" id="cert-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <p>Carga un certificado digital .p12 o .pfx para firmar</p>
+            <button id="btn-cert-load-sidebar" class="btn-secondary">Cargar Certificado</button>
+          </div>
+          <div id="cert-info" class="cert-info" style="display:none">
+            <div class="cert-status" id="cert-status">
+              <div class="cert-status-icon" id="cert-status-icon"></div>
+              <div class="cert-status-text">
+                <span id="cert-status-label">—</span>
+                <span id="cert-trust-level" class="cert-trust">—</span>
+              </div>
+            </div>
+            <div class="cert-details">
+              <div class="cert-section">
+                <h4>Titular</h4>
+                <div class="cert-row"><span class="cert-label">Nombre:</span><span id="cert-cn">—</span></div>
+                <div class="cert-row"><span class="cert-label">Organización:</span><span id="cert-org">—</span></div>
+                <div class="cert-row"><span class="cert-label">Email:</span><span id="cert-email">—</span></div>
+                <div class="cert-row"><span class="cert-label">País:</span><span id="cert-country">—</span></div>
+              </div>
+              <div class="cert-section">
+                <h4>Emisor</h4>
+                <div class="cert-row"><span class="cert-label">Autoridad:</span><span id="cert-issuer">—</span></div>
+                <div class="cert-row"><span class="cert-label">Organización:</span><span id="cert-issuer-org">—</span></div>
+              </div>
+              <div class="cert-section">
+                <h4>Validez</h4>
+                <div class="cert-row"><span class="cert-label">Desde:</span><span id="cert-from">—</span></div>
+                <div class="cert-row"><span class="cert-label">Hasta:</span><span id="cert-to">—</span></div>
+                <div class="cert-row"><span class="cert-label">Expira en:</span><span id="cert-expiry">—</span></div>
+              </div>
+              <div class="cert-section">
+                <h4>Técnico</h4>
+                <div class="cert-row"><span class="cert-label">Nº Serie:</span><span id="cert-serial" class="mono">—</span></div>
+                <div class="cert-row"><span class="cert-label">Algoritmo:</span><span id="cert-algo">—</span></div>
+                <div class="cert-row"><span class="cert-label">Uso:</span><span id="cert-usage">—</span></div>
+              </div>
+            </div>
+            <button id="btn-change-cert" class="btn-secondary" style="margin-top:12px;width:100%">Cambiar Certificado</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- PDF Viewer -->
+    <section id="viewer-container">
+      <!-- Welcome screen -->
+      <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-content">
+          <div class="welcome-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="url(#wg)" stroke-width="1.2"/><path d="M14 2v6h6" stroke="url(#wg)" stroke-width="1.2"/><path d="M12 18v-6M9 15l3 3 3-3" stroke="url(#wg)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="wg" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#4f46e5"/></linearGradient></defs></svg>
+          </div>
+          <h1>Bienvenido a <span class="gradient-text">SignPDF</span></h1>
+          <p>Visualiza y firma documentos PDF con firmas digitales PAdES legalmente válidas</p>
+          <div class="welcome-actions">
+            <button id="btn-welcome-open" class="btn-primary-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+              Abrir PDF
+            </button>
+            <button id="btn-welcome-cert" class="btn-secondary-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              Cargar Certificado
+            </button>
+          </div>
+          <div class="welcome-drop-zone" id="drop-zone">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+            <p>o arrastra un PDF aquí</p>
+          </div>
+          <div class="welcome-features">
+            <div class="feature-card">
+              <div class="feature-icon">🔐</div>
+              <h3>PAdES Compliant</h3>
+              <p>Firmas ETSI.CAdES.detached compatibles con Adobe</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">📜</div>
+              <h3>Certificados Oficiales</h3>
+              <p>Compatible con FNMT, DNIe, DigiCert y más</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🛡️</div>
+              <h3>Legalmente Válido</h3>
+              <p>Firmas reconocidas por Adobe Acrobat Reader</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF Pages render here -->
+      <div id="pdf-viewer" class="pdf-viewer" style="display:none">
+        <div id="pages-container" class="pages-container"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══ Status Bar ═══ -->
+  <footer id="statusbar">
+    <div class="status-left">
+      <span id="status-file" class="status-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Sin documento
+      </span>
+      <span id="status-sig" class="status-item" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span id="status-sig-text">—</span>
+      </span>
+    </div>
+    <div class="status-right">
+      <span id="status-cert" class="status-item">
+        <span class="status-dot" id="cert-dot"></span>
+        Sin certificado
+      </span>
+    </div>
+  </footer>
+
+  <!-- ═══ Sign Modal ═══ -->
+  <div id="sign-modal" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          Firmar Documento
+        </h2>
+        <button id="sign-modal-close" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="sign-cert-summary" id="sign-cert-summary">
+          <div class="sign-cert-icon" id="sign-cert-icon">🔐</div>
+          <div>
+            <strong id="sign-cert-name">—</strong>
+            <span id="sign-cert-issuer-text" class="text-muted">—</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="sign-reason">Razón de la firma</label>
+          <select id="sign-reason">
+            <option value="Aprobación del documento">Aprobación del documento</option>
+            <option value="Firma de conformidad">Firma de conformidad</option>
+            <option value="Revisión y aprobación">Revisión y aprobación</option>
+            <option value="Certificación del contenido">Certificación del contenido</option>
+            <option value="Firma contractual">Firma contractual</option>
+            <option value="custom">Otra razón...</option>
+          </select>
+          <input type="text" id="sign-reason-custom" class="form-input" placeholder="Escribe la razón..." style="display:none">
+        </div>
+        <div class="form-group">
+          <label for="sign-location">Localización</label>
+          <input type="text" id="sign-location" class="form-input" placeholder="Ej: Madrid, España">
+        </div>
+        <div class="form-group">
+          <label for="sign-contact">Email de contacto (opcional)</label>
+          <input type="email" id="sign-contact" class="form-input" placeholder="tu@email.com">
+        </div>
+        <div class="form-group">
+          <label>Color del borde de la firma</label>
+          <div id="sign-border-color" style="display:flex;gap:8px;flex-wrap:wrap;padding:4px 0">
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="Rojo">
+              <input type="radio" name="sig-color" value="#B83030" checked style="display:none">
+              <span class="color-swatch" style="width:28px;height:28px;border-radius:50%;background:#B83030;border:3px solid #B83030;display:inline-block;box-shadow:0 0 0 2px white, 0 0 0 3px #B83030"></span>
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="Azul">
+              <input type="radio" name="sig-color" value="#1A5276" style="display:none">
+              <span class="color-swatch" style="width:28px;height:28px;border-radius:50%;background:#1A5276;border:3px solid transparent;display:inline-block"></span>
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="Verde">
+              <input type="radio" name="sig-color" value="#1E8449" style="display:none">
+              <span class="color-swatch" style="width:28px;height:28px;border-radius:50%;background:#1E8449;border:3px solid transparent;display:inline-block"></span>
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="Negro">
+              <input type="radio" name="sig-color" value="#2C3E50" style="display:none">
+              <span class="color-swatch" style="width:28px;height:28px;border-radius:50%;background:#2C3E50;border:3px solid transparent;display:inline-block"></span>
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="Morado">
+              <input type="radio" name="sig-color" value="#6C3483" style="display:none">
+              <span class="color-swatch" style="width:28px;height:28px;border-radius:50%;background:#6C3483;border:3px solid transparent;display:inline-block"></span>
+            </label>
+            <label style="cursor:pointer;display:flex;align-items:center;gap:4px" title="Gris">
+              <input type="radio" name="sig-color" value="#707B7C" style="display:none">
+              <span class="color-swatch" style="width:28px;height:28px;border-radius:50%;background:#707B7C;border:3px solid transparent;display:inline-block"></span>
+            </label>
+          </div>
+        </div>
+        <div class="sign-info-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>La firma usará el estándar <strong>PAdES (ETSI.CAdES.detached)</strong>, compatible con Adobe Acrobat Reader y legalmente reconocida.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="sign-cancel" class="btn-secondary">Cancelar</button>
+        <button id="sign-confirm" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          Firmar Documento
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Certificate Password Modal ═══ -->
+  <div id="cert-modal" class="modal-overlay" style="display:none">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Cargar Certificado
+        </h2>
+        <button id="cert-modal-close" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="cert-file-display" id="cert-file-display">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+          <span id="cert-file-name">—</span>
+        </div>
+        <div class="form-group">
+          <label for="cert-password">Contraseña del certificado</label>
+          <div class="password-input-wrap">
+            <input type="password" id="cert-password" class="form-input" placeholder="Introduce la contraseña..." autocomplete="off">
+            <button id="cert-pw-toggle" class="pw-toggle" type="button" title="Mostrar contraseña">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="cert-error" class="form-error" style="display:none"></div>
+        <div class="cert-supported-info">
+          <h4>Certificados compatibles:</h4>
+          <ul>
+            <li>🇪🇸 FNMT — Fábrica Nacional de Moneda y Timbre</li>
+            <li>🇪🇺 DNIe — Documento Nacional de Identidad electrónico</li>
+            <li>🌐 DigiCert, GlobalSign, Comodo, Sectigo</li>
+            <li>📦 Cualquier certificado PKCS#12 (.p12 / .pfx)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="cert-cancel" class="btn-secondary">Cancelar</button>
+        <button id="cert-confirm" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Cargar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Loading Overlay ═══ -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p id="loading-text">Procesando...</p>
+    </div>
+  </div>
+
+  <!-- ═══ Toast Notifications ═══ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/pdf.worker.min.js';
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

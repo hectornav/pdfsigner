@@ -1,0 +1,84 @@
+{
+  "name": "signpdf",
+  "version": "1.0.0",
+  "description": "Visor y firmador de PDFs con firmas digitales legalmente válidas para Linux",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "ELECTRON_DISABLE_SANDBOX=1 electron . --dev",
+    "generate-cert": "node scripts/generate-test-cert.js",
+    "package": "electron-builder --linux",
+    "package:deb": "electron-builder --linux deb",
+    "package:rpm": "electron-builder --linux rpm",
+    "package:appimage": "electron-builder --linux AppImage",
+    "package:win": "electron-builder --win",
+    "package:all": "electron-builder --linux deb AppImage rpm --win nsis portable"
+  },
+  "author": {
+    "name": "Hector Navarro",
+    "email": "hector@signpdf.app"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/hectornav/pdfsigner",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "@signpdf/placeholder-plain": "^3.2.0",
+    "@signpdf/signer-p12": "^3.2.0",
+    "@signpdf/signpdf": "^3.2.0",
+    "node-forge": "^1.3.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^3.11.174"
+  },
+  "build": {
+    "appId": "com.signpdf.app",
+    "productName": "SignPDF",
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "!node_modules/canvas/**/*",
+      "!node_modules/canvas"
+    ],
+    "npmRebuild": false,
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "category": "Office",
+      "icon": "src/renderer/assets/icons",
+      "mimeTypes": [
+        "application/pdf"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "src/renderer/assets/icons/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "deb": {
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6"
+      ],
+      "category": "Office"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  }
+}
