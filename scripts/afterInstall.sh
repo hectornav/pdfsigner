@@ -6,17 +6,19 @@ if [ -f "$SANDBOX" ]; then
   chmod 4755 "$SANDBOX" 2>/dev/null
 fi
 
-# Create wrapper that always works
-WRAPPER="/usr/local/bin/signpdf-launch"
-cat > "$WRAPPER" << 'SCRIPT'
+# Create wrapper script that sets the env var
+cat > /opt/SignPDF/signpdf-wrapper << 'SCRIPT'
 #!/bin/bash
 export ELECTRON_DISABLE_SANDBOX=1
 exec /opt/SignPDF/signpdf "$@"
 SCRIPT
-chmod +x "$WRAPPER"
+chmod +x /opt/SignPDF/signpdf-wrapper
 
-# Also update the desktop file to use --no-sandbox
+# Patch .desktop file to use wrapper
 DESKTOP="/usr/share/applications/signpdf.desktop"
 if [ -f "$DESKTOP" ]; then
-  sed -i 's|Exec=/opt/SignPDF/signpdf|Exec=env ELECTRON_DISABLE_SANDBOX=1 /opt/SignPDF/signpdf|g' "$DESKTOP"
+  sed -i 's|^Exec=.*|Exec=/opt/SignPDF/signpdf-wrapper %U|g' "$DESKTOP"
 fi
+
+# Update desktop database
+update-desktop-database /usr/share/applications 2>/dev/null || true
