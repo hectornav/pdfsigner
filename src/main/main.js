@@ -5,6 +5,9 @@ const { signPDF, addWatermark } = require('./signer');
 const { loadCertificate, getCertificateInfo, generateTestCertificate } = require('./certificate');
 const { rotatePages, deletePages, extractPages, splitAllPages, mergePDFs, reorderPages, getPDFInfo } = require('./pdf-tools');
 
+// Fix Linux sandbox issue for packaged apps
+app.commandLine.appendSwitch('no-sandbox');
+
 let mainWindow;
 let currentPdfPath = null;
 let currentCertificate = null;
